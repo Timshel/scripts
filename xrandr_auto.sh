@@ -1,5 +1,6 @@
 #!/bin/bash
 last=0
+lastPid=-1
 while true
 do
     sleep 1
@@ -16,6 +17,11 @@ do
             xfconf-query -c xsettings -p /Xft/DPI -s 150
             xrandr --output eDP1 --auto            
         fi
+        if [ $lastPid -gt 0 ]; then
+            kill $lastPid
+        fi
+        xmonad --replace&
+        lastPid=$!
     else
         sleep 1
     fi
