@@ -4,8 +4,8 @@ lastPid=-1
 while true
 do
     sleep 1
-    nbactiv=$(xrandr -q  | grep " connected " | wc -l)
-    dp1Activ=$(xrandr -q  | grep -e "^DP1 connected " | wc -l)
+    nbactiv=$(cat /sys/class/drm/card*-*/status | grep -e "^connected" | wc -l)
+    dp1Activ=$(cat /sys/class/drm/card*-DP-1/status | grep -e "^connected" | wc -l)
     if [ $nbactiv -ne $last ];then
         if [ $nbactiv -eq 2 ] && [ $dp1Activ -eq 1 ] ;then
             echo Dual
