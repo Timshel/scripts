@@ -1,6 +1,6 @@
 #!/bin/bash
 last=0
-lastPid=-1
+lastPid=0
 while true
 do
     sleep 1
@@ -10,17 +10,18 @@ do
         if [ $nbactiv -eq 2 ] && [ $dp1Activ -eq 1 ] ;then
             echo Dual
             xfconf-query -c xsettings -p /Xft/DPI -s 90
-            xrandr --output eDP1 --mode 1920x1200 --right-of DP1
+            xrandr --output eDP1 --mode 1920x1080 --right-of DP1
         elif [ $nbactiv -eq 1 ]; then
             echo Simple
             xfconf-query -c xsettings -p /Xft/DPI -s 90
-            xrandr --output eDP1 --mode 1920x1200            
+            xrandr --output eDP1 --mode 1920x1080            
         fi
         if [ $lastPid -gt 0 ]; then
             kill $lastPid
         fi
         xmonad --replace&
         lastPid=$!
+        trap "kill $lastPid; exit 1" SIGINT
     else
         sleep 1
     fi
