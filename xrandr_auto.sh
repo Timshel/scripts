@@ -4,13 +4,13 @@ while true
 do
     sleep 1
     nbactiv=$(cat /sys/class/drm/card*-*/status | grep -e "^connected" | wc -l)
-    dp1Activ=$(cat /sys/class/drm/card*-DP-*/status | grep -e "^connected" | wc -l)
     if [ $nbactiv -ne $last ];then
+        active=$(xrandr | grep " connected" | grep -v "eDP1" | awk -F" " '{print $1}')
         xfconf-query -c xsettings -p /Xft/DPI -s 90
-        if [ $nbactiv -eq 2 ] && [ $dp1Activ -eq 1 ] ;then
+        if [ $nbactiv -eq 2 ]; then
             echo Dual
-            xrandr --output DP1-8 --mode 3440x1440 --rate 50 --primary
-            xrandr --output eDP1 --mode 1920x1080 --right-of DP1-8
+            xrandr --output $active --auto
+            xrandr --output eDP1  --mode 1920x1080 --right-of $active --primary
         elif [ $nbactiv -eq 1 ]; then
             echo Simple
             xrandr --output eDP1 --mode 1920x1080 --primary
